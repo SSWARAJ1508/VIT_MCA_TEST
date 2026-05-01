@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIT MCA Entrance Mock Exam</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body oncontextmenu="return false;" class="prevent-select">
+
+    <div id="app">
+        <!-- HEADER -->
+        <header class="app-header">
+            <div class="header-left">
+                <div class="logo">VIT<span style="font-weight:400;">MEE</span></div>
+                <div class="exam-title">MCA Mock Entrance Examination</div>
+            </div>
+            <div class="header-right" id="timer-container" style="display: none;">
+                <div class="timer-box">
+                    <span id="time-left">02:00:00</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- INSTRUCTION VIEW -->
+        <div id="instruction-view" class="view active container">
+            <div class="card instruction-card">
+                <h2>General Instructions</h2>
+                <div class="instruction-content">
+                    <p>Please read the following instructions carefully before starting the exam:</p>
+                    <ol>
+                        <li>Total duration of the examination is <strong>120 minutes</strong> (2 hours).</li>
+                        <li>The clock will be set at the server. The countdown timer in the top right corner will display the remaining time available for you to complete the examination.</li>
+                        <li>When the timer reaches zero, the examination will end by itself. You will not be required to end or submit your examination.</li>
+                        <li>There are <strong>100 questions</strong> in total across 3 sections: Mathematics (10), English (10), and Computer Science (80).</li>
+                        <li>Each correct answer carries <strong>+1 mark</strong>. There is <strong>no negative marking</strong> for wrong answers.</li>
+                        <li>Do not refresh the page or try to open new tabs. This is a proctored environment. Copy-paste and right-click have been disabled.</li>
+                    </ol>
+                    
+                    <h3>Color Legend</h3>
+                    <div class="legend-grid">
+                        <div class="legend-item"><span class="badge answered"></span> Answered</div>
+                        <div class="legend-item"><span class="badge marked"></span> Marked for Review</div>
+                        <div class="legend-item"><span class="badge not-answered"></span> Not Answered</div>
+                        <div class="legend-item"><span class="badge not-visited"></span> Not Visited</div>
+                    </div>
+                </div>
+                
+                <div class="action-footer center">
+                    <label class="consent-label">
+                        <input type="checkbox" id="consent-checkbox"> I have read and understood the instructions.
+                    </label>
+                    <button id="btn-start-exam" class="btn btn-primary" disabled>Start Exam</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- EXAM VIEW -->
+        <div id="exam-view" class="view main-exam-layout">
+            <div class="exam-left-panel">
+                <div class="section-tabs" id="section-tabs">
+                    <!-- Tabs injected via JS -->
+                </div>
+                <div class="question-container card">
+                    <div class="question-header">
+                        <h3 id="question-number-display">Question 1</h3>
+                    </div>
+                    <div class="question-text" id="question-text">
+                        <!-- Question text -->
+                    </div>
+                    <div class="options-container" id="options-container">
+                        <!-- Options injected here -->
+                    </div>
+                </div>
+                <div class="question-actions card">
+                    <div class="action-left">
+                        <button class="btn btn-outline" id="btn-mark-review">Mark for Review & Next</button>
+                        <button class="btn btn-outline" id="btn-clear-response">Clear Response</button>
+                    </div>
+                    <div class="action-right">
+                        <button class="btn btn-secondary" id="btn-prev">Previous</button>
+                        <button class="btn btn-primary" id="btn-save-next">Save & Next</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="exam-right-panel card">
+                <div class="panel-header">
+                    <h4>Question Palette</h4>
+                </div>
+                <div class="palette-legend">
+                    <div class="legend-item"><span class="badge answered"></span> Answered</div>
+                    <div class="legend-item"><span class="badge not-answered"></span> Not Answered</div>
+                    <div class="legend-item"><span class="badge not-visited"></span> Not Visited</div>
+                    <div class="legend-item"><span class="badge marked"></span> Marked for Review</div>
+                </div>
+                <div class="question-grid" id="question-grid">
+                    <!-- Grid items injected via JS -->
+                </div>
+                <div class="submit-container">
+                    <button class="btn btn-danger btn-full" id="btn-submit-exam">Submit Final Exam</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- RESULT VIEW -->
+        <div id="result-view" class="view container">
+            <div class="result-header card text-center">
+                <h2>Score Report & Performance Analysis</h2>
+                <p>VITMCA Mock Entrance Examination</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="res-score">0/100</div>
+                    <div class="stat-label">Total Score</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="res-attempted">0</div>
+                    <div class="stat-label">Attempted</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="res-correct">0</div>
+                    <div class="stat-label">Correct Answers</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="res-accuracy">0%</div>
+                    <div class="stat-label">Accuracy</div>
+                </div>
+            </div>
+
+            <div class="analysis-layout">
+                <div class="chart-container card">
+                    <h3>Section-wise Performance</h3>
+                    <canvas id="performanceChart"></canvas>
+                </div>
+                <div class="strength-weakness card">
+                    <h3>Key Insights</h3>
+                    <div class="insight-item">
+                        <span class="insight-icon strength">💪</span>
+                        <div>
+                            <strong>Strongest Area</strong>
+                            <p id="res-strongest">N/A</p>
+                        </div>
+                    </div>
+                    <div class="insight-item">
+                        <span class="insight-icon weakness">⚠️</span>
+                        <div>
+                            <strong>Area of Improvement</strong>
+                            <p id="res-weakest">N/A</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="review-section card">
+                <h3>Detailed Answer Review</h3>
+                <div id="review-container">
+                    <!-- Review items injected via JS -->
+                </div>
+            </div>
+            
+            <div class="center" style="margin-top: 2rem;">
+                <button class="btn btn-primary" onclick="localStorage.clear(); location.reload();">Take Exam Again</button>
+            </div>
+        </div>
+        
+    </div>
+
+    <!-- Modals -->
+    <div class="modal-overlay" id="confirm-modal">
+        <div class="modal card">
+            <h3>Confirm Submission</h3>
+            <p id="confirm-msg">Are you sure you want to submit the exam?</p>
+            <div class="modal-actions">
+                <button class="btn btn-outline" id="btn-cancel-submit">Cancel</button>
+                <button class="btn btn-primary" id="btn-confirm-submit">Yes, Submit</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="questions.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
